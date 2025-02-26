@@ -1,0 +1,150 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 2,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "PostgreSQL",
+      "description": "Match Result and First Half Result predictions",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 30
+              },
+              {
+                "color": "orange",
+                "value": 45
+              },
+              {
+                "color": "red",
+                "value": 60
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Time"
+          }
+        ]
+      },
+      "pluginVersion": "7.5.0",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    m.starting_at_timestamp AS \"Time\",\n    l.name AS \"League\",\n    lt.name AS \"Home Team\",\n    vt.name AS \"Away Team\",\n    m.id AS \"Match ID\"\nFROM matches m\nJOIN teams lt ON m.localteam_id = lt.id\nJOIN teams vt ON m.visitorteam_id = vt.id\nLEFT JOIN leagues l ON m.league_id = l.id\nWHERE m.starting_at_timestamp BETWEEN NOW() AND NOW() + INTERVAL '$days_ahead days'\n  AND ($league_id = 'All' OR m.league_id IN ($league_id))\nORDER BY m.starting_at_timestamp;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": []
+        },
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    p.match_id AS \"Match ID\",\n    p.developer_name AS tip_predictie,\n    p.selection AS predictie,\n    p.probability AS probabilitate\nFROM predictions p\nJOIN matches m ON p.match_id = m.id\nWHERE m.starting_at_timestamp BETWEEN NOW() AND NOW() + INTERVAL '$days_ahead days'\n  AND ($league_id = 'All' OR m.league_id IN ($league_id))\n  AND p.developer_name IN ('FULLTIME_RESULT_PROBABILITY', 'FIRST_HALF_WINNER_PROBABILITY', 'DOUBLE_CHANCE_PROBABILITY');",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": []
+        }
+      ],
+      "title": "Match Result Predictions",
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "Match ID",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Match ID": true
+            },
+            "indexByName": {},
+            "renameByName": {}
+          }
+        },
+        {
+          "id": "pivot",
+          "options": {
+            "columnBy": [
+              "tip_predictie",
+              "predictie"
+            ],
+            "rowBy": [
+              "Time",
+              "League",
+              "

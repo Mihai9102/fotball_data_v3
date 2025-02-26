@@ -1,0 +1,53 @@
+api:
+  base_url: 'https://api.sportmonks.com/v3/football'
+  token: ${SPORTMONKS_API_TOKEN}  # Will be replaced with env var
+  timeouts:
+    connect: 10
+    read: 30
+  leagues:
+    - 8    # Premier League
+    - 9    # Championship
+    - 24   # La Liga
+    - 27   # Serie A
+    - 72   # Bundesliga
+    - 82   # Ligue 1
+    - 181  # Eredivisie
+    - 208  # Primeira Liga
+    - 244  # Turkish Super Lig
+    - 271  # Belgian Pro League
+    - 301  # Scottish Premiership
+    - 384  # Swiss Super League
+    - 387  # Austrian Bundesliga
+    - 390  # Greek Super League
+    - 444  # Danish Superliga
+    - 453  # Norwegian Eliteserien
+    - 462  # Swedish Allsvenskan
+    - 486  # Czech First League
+    - 501  # Croatian HNL
+    - 564  # Ukrainian Premier League
+    - 567  # Romanian Liga I
+    - 570  # Bulgarian First League
+    - 573  # Serbian SuperLiga
+    - 591  # Hungarian OTP Bank Liga
+    - 600  # Cypriot First Division
+    - 609  # Polish Ekstraklasa
+    - 1371 # Slovenian PrvaLiga
+
+database:
+  type: 'postgresql'  # 'postgresql', 'mysql', or 'sqlite'
+  host: 'localhost'
+  port: 5432
+  name: 'football_data'
+  user: 'postgres'
+  password: ${DB_PASSWORD}  # Will be replaced with env var
+
+extraction:
+  start_date_offset: -1  # days before current date
+  end_date_offset: 7     # days after current date
+  schedule_interval: 6   # hours between extractions
+  include:
+    - 'predictions'
+    - 'localTeam'
+    - 'visitorTeam'
+    - 'odds'
+    - 'league'

@@ -1,0 +1,327 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 2,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.0.3",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  m.id as match_id,\n  m.league_name,\n  m.localteam_name,\n  m.visitorteam_name,\n  m.starting_at_timestamp\nFROM\n  matches m\nWHERE\n  m.starting_at_timestamp > NOW()\nORDER BY\n  m.starting_at_timestamp ASC\nLIMIT 20",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "id"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "matches",
+          "timeField": "created_at",
+          "timeColumn": "created_at",
+          "where": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Upcoming Matches",
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.0.3",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  prediction_key,\n  probability * 100 as probability_percent\nFROM\n  predictions\nWHERE\n  match_id = $match_id AND\n  bet_type = '1X2'\nORDER BY\n  probability DESC",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "id"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "predictions",
+          "timeField": "created_at",
+          "timeColumn": "created_at",
+          "where": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "1X2 Prediction Probabilities",
+      "type": "bargauge"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 6,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.0.3",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  prediction_key,\n  probability * 100 as probability_percent\nFROM\n  predictions\nWHERE\n  match_id = $match_id AND\n  bet_type = 'btts'\nORDER BY\n  probability DESC",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "id"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "predictions",
+          "timeField": "created_at",
+          "timeColumn": "created_at",
+          "where": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Both Teams To Score Probabilities",
+      "type": "bargauge"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 8,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.0.3",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  o.bookmaker_name,\n  o.market_name,\n  o.selection_name,\n  o.value as odd_value\nFROM\n  odds o\nWHERE\n  o.match_id = $match_id\nORDER BY\n  o.market_name, o.selection_name, o.value",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "id"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "odds",
+          "timeField": "created_at",
+          "timeColumn": "created_at",
+          "where": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Match Odds",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 25,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "datasource": "PostgreSQL",
+        "definition": "SELECT id, CONCAT(localteam_name, ' vs ', visitorteam_name, ' (', league_name, ')') as match_name FROM matches WHERE starting_at_timestamp > NOW() ORDER BY starting_at_timestamp ASC",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Match",
+        "multi": false,
+        "name": "match_id",
+        "options": [],
+        "query": "SELECT id, CONCAT(localteam_name, ' vs ', visitorteam_name, ' (', league_name, ')') as match_name FROM matches WHERE starting_at_timestamp > NOW() ORDER BY starting_at_timestamp ASC",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Football Predictions",
+  "uid": "football_predictions",
+  "version": 1
+}
